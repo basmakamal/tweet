@@ -1,0 +1,146 @@
+{% extends "::base.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block body %}
+    <!-- creat profile button -->
+
+    <section class="login">
+        <h1 class=""> <span>{{ "join"|trans() }} Now</span>  </h1>
+        <div class="login-or">
+            <div class="container">
+                <div class="col-md-6">
+                    <h2> <span> {{ 'sign.in'|trans }} </span> </h2>
+                    {% if error %}
+
+                        {{ error.messageKey }}
+                        {% if error.messageKey == 'Account is disabled.' %}
+                            {{ error.messageKey|trans({'%link%':path('tweet_registration_resend_confirm')}, 'security')|raw }}
+			{% elseif error.messageKey == 'Account is locked.' %}
+						    <a href="{{ path('tweet_unlock_user') }}">link</a>
+                        {% else %}
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        {% endif %}
+
+                    {% endif %}
+                    <form action="{{ path("fos_user_security_check") }}"  class="login-Register-form" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+                        <input type="email"  placeholder="{{ 'security.login.username'|trans }}" id="username" name="_username" value="{{ last_username }}" required="required" />
+
+
+                        <input type="password"  placeholder="{{ 'security.login.password'|trans }}"   id="password" name="_password" required="required" />
+
+                        <div class="checkbox remember-me clearfix">
+<label class="required">
+                            <input type="checkbox"  id="remember_me" name="_remember_me" value="on" />
+							 {{ 'security.login.remember_me'|trans }}
+                        </label> </div>
+                        <a href="{{ path('fos_user_resetting_request') }}">Forget your password?</a> 
+                        <button class="submit" id="_submit" value="{{ 'security.login.submit'|trans }}" name="_submit" > {{ 'security.login.submit'|trans }} </button><a href="{{ path('fos_user_registration_register') }}" class="creat-ur-account-btn"> Register </a>
+
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+                    <h2> <span> {{ "or"|trans() }} </span> </h2>
+                    <div class="login-with-fb-or-g">
+                        <a href="#" class="btn fb-btn"  onClick="fb_login();">{{ 'sign.in.with.facebook'|trans }}</a>
+                        <a href="#"   id="customBtn" class="btn g-btn">{{ 'sign.in.with.google'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+{% endblock body %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.fbAsyncInit = function () {
+            // init the FB JS SDK
+            FB.init({
+                appId: '402262716554024', // App ID from the app dashboard
+                channelUrl: 'localhost/subs/web/', // Channel file for x-domain comms
+                status: true, // Check Facebook Login status
+                xfbml: true, // Look for social plugins on the page
+                version: 'v2.5'
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function fb_login() {
+		
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    // connected
+                    //   alert('Already connected, redirect to login page to create token.');
+                    document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                } else {
+                    // not_authorized
+                    FB.login(function (response) {
+                        if (response.authResponse) {
+                            document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                        } else {
+                            // alert('Cancelled.');
+                        }
+                    }, {scope: 'email'});
+                }
+            });
+        }
+
+        var locale = '{{ app.request.locale }}';
+
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <script src="https://apis.google.com/js/api:client.js"></script>
+
+    <script>
+        var googleUser = {};
+        var startApp = function () {
+
+            gapi.load('auth2', function () {
+                // Retrieve the singleton for the GoogleAuth library and set up the client.
+                auth2 = gapi.auth2.init({
+                    client_id: '188829703249-cad372eqache945vtl7a45rlh2322i3c.apps.googleusercontent.com',
+                    //  cookiepolicy: 'single_host_origin',
+                    // Request scopes in addition to 'profile' and 'email'
+                    //scope: 'additional_scope'
+                });
+
+                attachSignin(document.getElementById('customBtn'));
+                /*  var GoogleAuth = gapi.auth2.getAuthInstance();
+                 GoogleAuth.grantOfflineAccess({
+                 'scope': 'profile email',
+                 'redirect_uri': 'http://myownpersonaldomain.com/code'
+                 });*/
+            });
+
+        };
+
+        function attachSignin(element) {
+            
+            auth2.attachClickHandler(element, {},
+                    function (googleUser) {
+                        document.location = "{{ url("hwi_oauth_service_redirect", {service: "google"}) }}";
+                        document.getElementById('name').innerText = "Signed in: " +
+                                googleUser.getBasicProfile().getName();
+                    }, function (error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
+        }
+        startApp();
+    </script>
+
+{% endblock %}

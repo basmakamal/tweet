@@ -1,0 +1,8 @@
+tweet_registration_resend_confirm:
+    path: /register/resend-confirm
+    defaults: { _controller: UserBundle:Registration:resendConfirm }
+    requirements:
+        _method: GET|POST        
+tweet_unlock_user:
+    path: /user/unlock
+    defaults: { _controller: UserBundle:ChangePassword:unlock }

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+        <meta name="description" content="Tweeter">
+        <meta name="author" content="NetServex">
+        <link rel="icon" href="{{ asset('favicon.png') }}">
+        <title>{% block title %}Tweeter!{% endblock %}</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('bundles/app/css/bootstrap.css') }}" rel="stylesheet">
+
+        <!-- Custom styles -->
+        <link href="{{ asset('bundles/app/css/font-awesome.css') }}" rel="stylesheet">
+        <link href="{{ asset('bundles/app/css/main.css') }}" rel="stylesheet">
+        <link href="{{ asset('bundles/app/css/responsive.css') }}" rel="stylesheet">
+        <link href="{{asset('bundles/app/css/jquery.jscrollpane.css')}}"  rel="stylesheet">
+        <link href="{{asset('bundles/app/css/jquery-ui.min.css')}}"  rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body>
+
+    <div id="outer-wrap">
+        <div id="inner-wrap">
+            <section class="header-menu">
+               
+
+                <nav id="nav" class="col-lg-10 col-md-10 col-sm-10 col-xs-12 no-padding" role="navigation">
+                    <div class="block clearfix">
+                        <h2 class="block-title">Chapters</h2>
+                        <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 menu-top">
+                            <ul class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
+                                <li class="{% if app.request.attributes.get('_route') == 'home_page' %}is-active{% endif %}">
+                                    <a href="{{ path('home_page') }}">{{ 'home'|trans() }}</a>
+                                </li>
+                               
+
+                            </ul>
+                            <ul class="col-lg-3 col-md-3 col-sm-12 col-xs-12 social">
+                                <li> <a href="#" target="_blank" class="facebook"> </a> </li>
+                                <li> <a href="#" class="twitter"> </a> </li>
+                                <li> <a href="#" class="googlePlus"> </a> </li>
+                                <!-- <li> <a href="#" id="toggle-search" class="searchbtn"> </a> </li> -->
+                            </ul>
+
+                           
+                           
+
+
+
+                        </div>
+
+
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 header-login-area">
+
+                              
+
+                            <ul class="nav navbar-nav">
+                                {% if app.user  %}
+                                    <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{app.user.username}}  <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            
+                                            
+                                            <li><a href="{{ path('fos_user_security_logout') }}">logout</a></li>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li><a href="{{ path('fos_user_security_login') }}">{{ 'login.register'|trans() }}</a></li>
+                                    {% endif %}
+
+                            </ul>
+                        </div>
+                       
+                    </div>
+                </nav>
+            </section>
+
+           
+        {% block body %}{% endblock %}
+        
+
+    </div>
+</div>
+
+
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/jquery-1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bundles/tweets/js/tweets.js')}}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <script src="{{asset('bundles/app/js/jquery-ui.min.js')}}"></script>
+
+{% endblock %}
+</body>
+</html>

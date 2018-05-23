@@ -1,0 +1,103 @@
+{% extends "::base.html.twig" %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.fbAsyncInit = function () {
+            // init the FB JS SDK
+            FB.init({
+                appId: '402262716554024', // App ID from the app dashboard
+                channelUrl: 'localhost/testapp/web/', // Channel file for x-domain comms
+                status: true, // Check Facebook Login status
+                xfbml: true, // Look for social plugins on the page
+                version: 'v2.5'
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function fb_login() {
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    // connected
+                    //   alert('Already connected, redirect to login page to create token.');
+                    document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                } else {
+                    // not_authorized
+                    FB.login(function (response) {
+                        if (response.authResponse) {
+                            document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                        } else {
+                            // alert('Cancelled.');
+                        }
+                    }, {scope: 'email'});
+                }
+            });
+        }
+
+        var locale = '{{ app.request.locale }}';
+
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <script src="https://apis.google.com/js/api:client.js"></script>
+
+    <script>
+        var googleUser = {};
+        var startApp = function () {
+
+            gapi.load('auth2', function () {
+                // Retrieve the singleton for the GoogleAuth library and set up the client.
+                auth2 = gapi.auth2.init({
+                    client_id: '188829703249-cad372eqache945vtl7a45rlh2322i3c.apps.googleusercontent.com',
+                    //  cookiepolicy: 'single_host_origin',
+                    // Request scopes in addition to 'profile' and 'email'
+                    //scope: 'additional_scope'
+                });
+
+                attachSignin(document.getElementById('customBtn'));
+                /*  var GoogleAuth = gapi.auth2.getAuthInstance();
+                 GoogleAuth.grantOfflineAccess({
+                 'scope': 'profile email',
+                 'redirect_uri': 'http://myownpersonaldomain.com/code'
+                 });*/
+            });
+
+        };
+
+        function attachSignin(element) {
+            
+            auth2.attachClickHandler(element, {},
+                    function (googleUser) {
+                        document.location = "{{ url("hwi_oauth_service_redirect", {service: "google"}) }}";
+                        document.getElementById('name').innerText = "Signed in: " +
+                                googleUser.getBasicProfile().getName();
+                    }, function (error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
+        }
+        startApp();
+        $( ".fos_user_registration_register" ).submit(function( event ) {
+          if (($('#fos_user_registration_form_terms').closest('span')).checked === false){
+              $('#term_validate').show();
+      return false;
+   }
+
+});
+        
+    </script>
+
+{% endblock %}    
+{% block body %}
+
+    {% include "FOSUserBundle:Registration:register_content.html.twig" %}
+
+{% endblock body %}

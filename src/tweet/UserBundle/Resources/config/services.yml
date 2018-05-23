@@ -1,0 +1,6 @@
+services:
+    tweet.form.registration:
+        class: tweet\UserBundle\Form\Type\RegisterFormType
+        tags:
+            - { name: form.type, alias: tweet_user_registration }
+    

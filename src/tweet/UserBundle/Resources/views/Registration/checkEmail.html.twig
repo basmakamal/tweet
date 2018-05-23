@@ -1,0 +1,15 @@
+{% extends "::base.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block body %}
+    <section class="successMsg">
+        <div class="container">
+            <div class="successMsgCon">
+                <i class="fa fa-check-circle"></i>
+                <h3>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</h3>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

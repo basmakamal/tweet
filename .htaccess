@@ -1,0 +1,18 @@
+#AuthUserFile /home/gigzilernetserve/public_html/.htpasswd
+#AuthType Basic
+#AuthName "My Secret Page"
+#Require valid-user
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    #RewriteBase /
+
+    #RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteRule ^(.*)$ app.php [QSA,L]
+     RewriteCond %{REQUEST_URI} !web/
+     RewriteCond %{HTTP_HOST} ^gigzler.netservex.com$
+     RewriteRule (.*) /web/$1 [L]
+</IfModule>
+RewriteCond %{HTTP_HOST} ^gigzler.netservex.com$
+RewriteRule ^(.*)$ "\/web\/$1" [R=302,L]

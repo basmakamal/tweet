@@ -1,0 +1,26 @@
+
+<section class="login">
+    <h1 class=""> <span>{{ "join"|trans() }}</span> {{ "Tweeter"|trans }} </h1>
+    <div class="login-or">
+        <div class="container">
+            <div class="col-md-12">
+                <h2> <span> {{ 'resend.mail'|trans }} </span> </h2>
+                {% if invalid_username is defined %}
+                    <div class="alert alert-danger">    <ul class="list-unstyled"><li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username},"FOSUserBundle") }}</li></ul>
+                    </div>
+                    
+                {% endif %}
+                {{ form_errors(form) }}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate' ,'class': 'login-Register-form fos_user_registration_register'}}) }}
+                {{ form_widget(form.email) }}
+                <div>
+                    <button type="submit"  class="submit" value="{{ 'registration.resend.submit'|trans }}" > {{ 'registration.resend.submit'|trans }} </button>
+
+                </div>
+                {{ form_end(form) }}  
+            </div>
+
+        </div>
+    </div>
+</section>
+

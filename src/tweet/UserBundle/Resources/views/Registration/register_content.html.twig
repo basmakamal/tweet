@@ -1,0 +1,58 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<!-- register section -->
+<section class="login">
+    <h1 class=""> <span>{{ "join"|trans() }}</span> {{ "Tweeter"|trans([],"messages") }} </h1>
+    <div class="login-or">
+        <div class="container">
+            <div class="col-md-6">
+                <h2> <span> {{ "layout.register"|trans([],"FOSUserBundle") }} </span> </h2>
+                {{ form_start(form, {'method': 'post','id':'user_registration', 'action': path('fos_user_registration_register') ~ '?token=' ~ app.request.get('token'), 'attr': {'class': 'login-Register-form fos_user_registration_register','id':'registerform'}}) }}
+   
+                        {{ form_label(form.username) }}
+                        {{ form_widget(form.username) }}
+                        {{ form_errors(form.email) }}
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email,{'attr':{'tabindex':'1','placeholder':"email"|trans}}) }}
+                        {{ form_errors(form.plainPassword.first) }}
+                        {{ form_label(form.plainPassword.first) }}
+                        {{ form_widget(form.plainPassword.first,{'attr':{'tabindex':'1','placeholder':"form.password"|trans}}) }}
+                        {{ form_errors(form.plainPassword.second) }}
+                        {{ form_label(form.plainPassword.second) }}
+                        {{ form_widget(form.plainPassword.second,{'attr':{'tabindex':'1','placeholder':"form.password_confirmation"|trans}}) }}
+                       
+                <span id="term_error" style="color: red;display: none">Required field</span>
+                <input type="text" value="{{ app.request.get('token') }}" id="friend_token" name="friend_token" hidden>
+                <button class="submit" value="Submit" tabindex="1"> {{ 'registration.submit'|trans }} </button>
+
+                {{ form_end(form) }}
+            </div>
+
+            <div class="col-md-6">
+                <h2> <span>{{ "or"|trans() }} </span> </h2>
+                <div class="login-with-fb-or-g register-with-fb-or-g">
+                    <a href="#" class="btn fb-btn" onClick="fb_login();">{{ 'sign.up.with.facebook'|trans({},"messages") }}</a>
+                    <a href="#" class="btn g-btn"  id="customBtn" >{{ 'sign.up.with.google'|trans({},"messages") }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+
+    function submitform() {
+        if (!$('#fos_user_registration_form_terms').is(':checked')) {
+            $('#fos_user_registration_form_terms').addClass( "term-error" );
+            return false;
+        }
+        else {
+            $('#fos_user_registration_form_terms').removeClass( "term-error" );
+            return true;
+
+
+        }
+
+    }
+
+</script>
